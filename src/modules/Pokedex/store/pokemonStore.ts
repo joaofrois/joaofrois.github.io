@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { fetchPokemonsList, getPokemonInfo, searchPokemon } from '../api/pokeapi'
+import { fetchPokemonsList, getPokemonInfo, searchPokemon, getLocationArea } from '../api/pokeapi'
 
 interface Pokemon {
   id: number
@@ -22,6 +22,7 @@ interface Stat {
 interface Type {
   name: string
 }
+
 
 interface PokemonState {
   pokemons: Pokemon[]
@@ -117,7 +118,7 @@ export const usePokemonStore = defineStore('pokemon', {
           types: pokemonInfo.types.map((typeData) => ({
             name: typeData.type.name
           })),
-          location_area_encounters: '',
+          location_area_encounters: pokemonInfo.location_area_encounters,
           stats: mapStats(pokemonInfo.stats)
         }))
         this.$state.pokemons = pokemons
@@ -141,7 +142,7 @@ export const usePokemonStore = defineStore('pokemon', {
             types: pokemonInfo.types.map((typeData) => ({
               name: typeData.type.name
             })),
-            location_area_encounters: '',
+            location_area_encounters: pokemonInfo.location_area_encounters,
             stats: mapStats(pokemonInfo.stats)
           }))
           this.$state.pokemons = [...this.$state.pokemons, ...pokemons]
@@ -162,14 +163,24 @@ export const usePokemonStore = defineStore('pokemon', {
           types: fetchedData.types.map((typeData) => ({
             name: typeData.type.name
           })),
-          location_area_encounters: '',
+          location_area_encounters: fetchedData.location_area_encounters,
           stats: mapStats(fetchedData.stats)
         }
         this.$state.searchedPokemon = pokemon
-        console.log(this.$state.searchedPokemon)
       } catch (error) {
         this.$state.searchedPokemon = null
         console.error('Failed to search pokemon by name:', error)
+      }
+    },
+    async fetchPokemonLocationArea(url: string) {
+      try {
+        const locationAreas = await getLocationArea(url);
+        return locationAreas.map((locations) => ({
+          name: locations.name
+        }));
+      } catch (error) {
+        console.error('Failed to fetch location areas:', error);
+        return [];
       }
     },
     sortPokemons() {

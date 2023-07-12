@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import apiConfig from '@/lib/config'
-import type { PokemonList, PokemonInfo } from '@/models/pokeapi'
+import type { PokemonList, PokemonInfo, LocationArea } from '@/models/pokeapi'
 
 const BASE_URL = apiConfig.baseUrl
 
@@ -19,6 +19,19 @@ export async function getPokemonInfo(url: string): Promise<PokemonInfo> {
   try {
     const response = await axios.get(url)
     return response.data
+  } catch (error) {
+    console.error('Failed to fetch Pokemons:', error)
+    throw error
+  }
+}
+
+export async function getLocationArea(url: string): Promise<LocationArea[]> {
+  try {
+    const response = await axios.get(url)
+    return response.data.map((area : any) => ({
+      name: area.location_area.name,
+      url: area.location_area.url
+    }))
   } catch (error) {
     console.error('Failed to fetch Pokemons:', error)
     throw error

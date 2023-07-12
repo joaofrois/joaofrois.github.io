@@ -60,7 +60,8 @@ export default defineComponent({
       }
     }
 
-    const checkDetails = (e) => {
+    const checkDetails = async (e) => {
+      const locationAreas = await store.fetchPokemonLocationArea(e.location_area_encounters)
       alert(`
       Name: ${e.name}
       Types: ${e.types.map(type => type.name).join(', ')}
@@ -72,6 +73,9 @@ export default defineComponent({
       SPD: ${e.stats.speed}
       SpAtkk: ${e.stats.special_attack}
       SpDeff: ${e.stats.special_defense}
+
+      Location Areas: 
+      ${locationAreas.map(area => area.name).join('\n')}
 
       `)
     }

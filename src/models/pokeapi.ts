@@ -347,3 +347,8 @@ export interface Type2 {
   name: string
   url: string
 }
+
+export interface LocationArea {
+  name: string
+  url: string
+}
