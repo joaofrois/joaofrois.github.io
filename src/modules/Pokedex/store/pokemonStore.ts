@@ -28,7 +28,6 @@ interface PokemonState {
   pokemons: Pokemon[]
   isLoading: boolean
   isFiltered: boolean
-  selectedPokemon: Pokemon | null
   searchQuery: string
   selectedTypes: string[]
   error: boolean
@@ -77,7 +76,6 @@ export const usePokemonStore = defineStore('pokemon', {
   state: (): PokemonState => ({
     pokemons: [],
     isLoading: false,
-    selectedPokemon: null,
     searchQuery: '',
     selectedTypes: [],
     error: false,
@@ -175,7 +173,8 @@ export const usePokemonStore = defineStore('pokemon', {
     async fetchPokemonLocationArea(url: string) {
       try {
         const locationAreas = await getLocationArea(url);
-        return locationAreas.map((locations) => ({
+        const limitedLocations = locationAreas.slice(0, 5);
+        return limitedLocations.map((locations) => ({
           name: locations.name
         }));
       } catch (error) {

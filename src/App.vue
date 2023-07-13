@@ -13,6 +13,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-
+  html {
+    font-family: monospace;
+  }
 </style>
   
